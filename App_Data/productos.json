@@ -1,0 +1,26 @@
+[
+  {
+    "SKU": "LAP-001",
+    "Nombre": "Laptop Dell Inspiron 15",
+    "Categoria": 1,
+    "Descripcion": "Laptop con procesador Intel Core i7, 16 GB de RAM y SSD de 512 GB.",
+    "Precio": 899999.99,
+    "Inventario": 15
+  },
+  {
+    "SKU": "MOU-025",
+    "Nombre": "Mouse Inalámbrico Logitech M185",
+    "Categoria": 2,
+    "Descripcion": "Mouse inalámbrico con conexión USB.",
+    "Precio": 15990.50,
+    "Inventario": 120
+  },
+  {
+    "SKU": "sa",
+    "Nombre": "xdzf",
+    "Categoria": 1,
+    "Descripcion": "sdf",
+    "Precio": 3.0,
+    "Inventario": 3
+  }
+]

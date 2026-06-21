@@ -1,0 +1,146 @@
+﻿@using ProductManager.Models;
+@model List<Producto>
+@{
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<main>
+    <section id="opciones">
+        <h2>Lista de productos</h2>
+        @Html.ActionLink("Agregar Producto", "Agregar", "Productos", new
+        {
+            @class = "btn btn-primary"
+        })
+    </section>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            No existen productos registrados.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+
+            <table class="table table-striped table-hover align-middle">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th>SKU</th>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var producto in Model)
+                    {
+                        <tr>
+                            <td>@producto.SKU</td>
+                            <td>@producto.Nombre</td>
+                            <td>@producto.Precio.ToString("C")</td>
+
+                            <td class="text-center">
+
+                                <button class="btn btn-sm btn-outline-primary btnDetalle"
+                                        data-sku="@producto.SKU">
+                                    Ver
+                                </button>
+
+                                @Html.ActionLink("Editar", "Edit",
+                                    new { id = producto.SKU },
+                                    new { @class = "btn btn-sm btn-outline-warning" })
+
+                                @Html.ActionLink("Eliminar", "Delete",
+                                    new { id = producto.SKU },
+                                    new { @class = "btn btn-sm btn-outline-danger" })
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+
+        </div>
+    }
+
+
+</main>
+
+<!-- MODAL DETALLE PRODUCTO -->
+<div class="modal fade" id="modalProducto" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+
+        <div class="modal-content">
+
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Detalle del Producto</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <p><strong>SKU:</strong> <span id="sku"></span></p>
+                        <p><strong>Nombre:</strong> <span id="nombre"></span></p>
+                        <p><strong>Categoría:</strong> <span id="categoria"></span></p>
+                    </div>
+
+                    <div class="col-md-6">
+                        <p><strong>Precio:</strong> <span id="precio"></span></p>
+                        <p><strong>Inventario:</strong> <span id="inventario"></span></p>
+                    </div>
+
+                </div>
+
+                <hr />
+
+                <p><strong>Descripción:</strong></p>
+                <p id="descripcion"></p>
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+
+    <script>
+        $(document).on("click", ".btnDetalle", function () {
+
+        var sku = $(this).data("sku");
+
+        $.ajax({
+            url: '/Productos/Obtener'+sku,
+            type: 'GET',
+            success: function (data) {
+
+                $("#sku").text(data.SKU);
+                $("#nombre").text(data.Nombre);
+                $("#categoria").text(data.Categoria);
+                $("#precio").text(data.Precio);
+                $("#inventario").text(data.Inventario);
+                $("#descripcion").text(data.Descripcion);
+
+                var modal = new bootstrap.Modal(document.getElementById('modalProducto'));
+                modal.show();
+            },
+            error: function () {
+                alert("Error al cargar el producto");
+            }
+        });
+
+    });</script>
+
+}
