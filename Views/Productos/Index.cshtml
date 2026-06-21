@@ -5,12 +5,23 @@
 }
 
 <main>
-    <section id="opciones">
+    <section id="opciones" class="mb-2">
         <h2>Lista de productos</h2>
         @Html.ActionLink("Agregar Producto", "Agregar", "Productos", new
         {
-            @class = "btn btn-primary"
+            @class = "btn btn-primary mb-2"
         })
+        @if (TempData["Mensaje"] != null)
+        {
+            <div class="alert alert-@TempData["TipoMensaje"] alert-dismissible fade show" role="alert">
+                @TempData["Mensaje"]
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert">
+                </button>
+            </div>
+        }
     </section>
 
     @if (!Model.Any())
@@ -49,13 +60,12 @@
                                     Ver
                                 </button>
 
-                                @Html.ActionLink("Editar", "Edit",
-                                    new { id = producto.SKU },
-                                    new { @class = "btn btn-sm btn-outline-warning" })
-
-                                @Html.ActionLink("Eliminar", "Delete",
-                                    new { id = producto.SKU },
-                                    new { @class = "btn btn-sm btn-outline-danger" })
+                                <button type="button"
+                                        class="btn btn-sm btn-outline-danger btnEliminar"
+                                        data-sku="@producto.SKU"
+                                        data-nombre="@producto.Nombre">
+                                    Eliminar
+                                </button>
 
                             </td>
                         </tr>
@@ -114,33 +124,119 @@
     </div>
 </div>
 
+<!-- MODAL ELIMINAR PRODUCTO -->
+
+<div class="modal fade" id="modalEliminar" tabindex="-1" aria-labelledby="tituloEliminar" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="tituloEliminar">
+                    Confirmar eliminación
+                </h5>
+
+                <button type="button"
+                        class="btn-close btn-close-white"
+                        data-bs-dismiss="modal">
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                <p>¿Está seguro de que desea eliminar el siguiente producto?</p>
+
+                <div class="alert alert-warning mb-0">
+                    <strong id="nombreProducto"></strong>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+                    Cancelar
+                </button>
+                <input type="hidden"
+                       id="skuEliminar"
+                       name="sku" />
+
+                <button type="button"
+                        class="btn btn-danger"
+                        id="btnConfirmarEliminar">
+                    Sí, eliminar
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+
 @section Scripts {
 
     <script>
         $(document).on("click", ".btnDetalle", function () {
 
-        var sku = $(this).data("sku");
+            var sku = $(this).data("sku");
 
-        $.ajax({
-            url: '/Productos/Obtener'+sku,
-            type: 'GET',
-            success: function (data) {
+            $.ajax({
+                url: '/Productos/Obtener',
+                type: 'GET',
+                data: { sku: sku },
+                success: function (data) {
 
-                $("#sku").text(data.SKU);
-                $("#nombre").text(data.Nombre);
-                $("#categoria").text(data.Categoria);
-                $("#precio").text(data.Precio);
-                $("#inventario").text(data.Inventario);
-                $("#descripcion").text(data.Descripcion);
+                    $("#sku").text(data.SKU);
+                    $("#nombre").text(data.Nombre);
+                    $("#categoria").text(data.Categoria);
+                    $("#precio").text(data.Precio);
+                    $("#inventario").text(data.Inventario);
+                    $("#descripcion").text(data.Descripcion);
 
-                var modal = new bootstrap.Modal(document.getElementById('modalProducto'));
-                modal.show();
-            },
-            error: function () {
-                alert("Error al cargar el producto");
-            }
+                    var modal = new bootstrap.Modal(document.getElementById('modalProducto'));
+                    modal.show();
+                },
+                error: function () {
+                    alert("Error al cargar el producto");
+                }
+            });
+
         });
 
-    });</script>
+        $("#btnConfirmarEliminar").click(function () {
+
+            var sku = $("#skuEliminar").val();
+
+            $.ajax({
+                url: '/Productos/Eliminar?sku=' + encodeURIComponent(sku),
+                type: 'DELETE',
+                success: function () {
+                    location.reload();
+                },
+                error: function () {
+                    alert("Ocurrió un error al eliminar el producto.");
+                }
+            });
+
+        });
+
+        $(".btnEliminar").click(function () {
+            var modal = new bootstrap.Modal(document.getElementById('modalEliminar'));
+
+
+            var sku = $(this).data("sku")
+            var nombre = $(this).data("nombre")
+
+            $("#nombreProducto").text(nombre);
+
+            $("#skuEliminar").val(sku);
+
+            modal.show();
+        });
+    </script>
 
 }

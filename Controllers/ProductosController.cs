@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Http.Results;
 using System.Web.Mvc;
 
 namespace ProductManager.Controllers
@@ -31,14 +32,34 @@ namespace ProductManager.Controllers
 			{
 				return View(producto);
 			}
-			ProductoService.GuardarProducto(producto);
+			try
+			{
+				ProductoService.GuardarProducto(producto);
+				TempData["Mensaje"] = "El producto fue guardado exitosamente.";
+				TempData["TipoMensaje"] = "success";
+			}
+			catch (Exception)
+			{
+				TempData["Mensaje"] = "El producto no se pudo guardar.";
+				TempData["TipoMensaje"] = "danger";
+			}
 			return RedirectToAction("Index");
 		}
 		[HttpGet]
-		public ActionResult Obtener(int sku)
+		public ActionResult Obtener(string sku)
 		{
+			Producto producto = ProductoService.ObtenerProducto(sku);
+			return Json(producto, JsonRequestBehavior.AllowGet);
+		}
 
-			return View();
+		[HttpDelete]
+		public ActionResult Eliminar(string sku)
+		{
+			if (ProductoService.EliminarProducto(sku))
+			{
+				return new HttpStatusCodeResult(200);
+			}
+			return new HttpStatusCodeResult(500);
 		}
 	}
 }

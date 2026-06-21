@@ -54,5 +54,30 @@ namespace ProductManager.Models
 			}
 			
 		}
+
+		public static bool EliminarProducto(string sku)
+		{
+			List<Producto> productos = new List<Producto>();
+
+			if (File.Exists(ruta))
+			{
+				productos = ProductoService.ObtenerTodos();
+			}
+			try
+			{
+				productos.Remove(productos.Where(prod => prod.SKU.Equals(sku)).FirstOrDefault());
+
+				string jsonFinal = JsonConvert.SerializeObject(productos, Formatting.Indented);
+
+				File.WriteAllText(ruta, jsonFinal);
+
+				return true;
+			}
+			catch (Exception)
+			{
+				return false;
+			}
+
+		}
 	}
 }
