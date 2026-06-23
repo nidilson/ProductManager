@@ -51,7 +51,7 @@
                         <tr>
                             <td>@producto.SKU</td>
                             <td>@producto.Nombre</td>
-                            <td>@producto.Precio.ToString("C")</td>
+                            <td>@producto.Precio.ToString("C", new System.Globalization.CultureInfo("es-CR"))</td>
 
                             <td class="text-center">
 
@@ -192,7 +192,7 @@
 
                     $("#sku").text(data.SKU);
                     $("#nombre").text(data.Nombre);
-                    $("#categoria").text(data.Categoria);
+                    $("#categoria").text(data.CategoriaNombre);
                     $("#precio").text(data.Precio);
                     $("#inventario").text(data.Inventario);
                     $("#descripcion").text(data.Descripcion);

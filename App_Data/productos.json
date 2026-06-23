@@ -5,7 +5,8 @@
     "Categoria": 1,
     "Descripcion": "Laptop con procesador Intel Core i7, 16 GB de RAM y SSD de 512 GB.",
     "Precio": 899999.99,
-    "Inventario": 15
+    "Inventario": 15,
+    "CategoriaNombre": "COMPUTADORAS"
   },
   {
     "SKU": "MOU-025",
@@ -13,6 +14,7 @@
     "Categoria": 2,
     "Descripcion": "Mouse inalámbrico con conexión USB.",
     "Precio": 15990.50,
-    "Inventario": 120
+    "Inventario": 120,
+    "CategoriaNombre": "MOVILES"
   }
 ]

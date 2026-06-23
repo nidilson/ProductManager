@@ -12,6 +12,7 @@ namespace ProductManager.Models
 		
 		[Required(ErrorMessage = "Este campo es requerido")]
 		[MaxLength(20)]
+		[SKUValidator]
 		public string SKU { get; set; }
 
 		[DisplayName("Nombre del producto")]
@@ -21,6 +22,7 @@ namespace ProductManager.Models
 
 		[DisplayName("Categoría de producto")]
 		[Required(ErrorMessage = "Este campo es requerido")]
+		[EnumDataType(typeof(CategoriaEnum), ErrorMessage = "Seleccione una opción")]
 		public CategoriaEnum Categoria { get; set; }
 
 		[DisplayName("Descripción del producto")]
@@ -36,5 +38,9 @@ namespace ProductManager.Models
 		[Required(ErrorMessage = "Este campo es requerido")]
 		[Range(0, 999999999, ErrorMessage = "El valor tiene que estar entre 0 y 999999999")]
 		public int Inventario { get; set; }
+
+		public string CategoriaNombre { get { return Categoria.ToString(); } }
+
+
 	}
 }
